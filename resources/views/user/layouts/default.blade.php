@@ -5,7 +5,7 @@
     <body class="bg-gray-100">
         @include('user.includes.header')
 
-        @yeild('content')
+        @yield('content')
 
         @include('user.includes.footer')
     </body>

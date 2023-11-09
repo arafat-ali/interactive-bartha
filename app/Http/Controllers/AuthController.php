@@ -41,7 +41,6 @@ class AuthController extends Controller
         if(!$user){
             return back()->withInput()->with('no_account_found', 'No account found with this email');
         }
-        dd($request->only(['email', 'password']));
 
         if (Auth::attempt($request->only(['email', 'password']))) {
             $request->session()->regenerate();

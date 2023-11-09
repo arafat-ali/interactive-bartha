@@ -29,6 +29,8 @@ Route::post('/login', [AuthController::class, 'postLogin'])->name('post-login');
 
 
 Route::get('/user', [UserController::class, 'home'])->name('user');
+Route::get('/user/profile', [UserController::class, 'profile']);
+Route::get('/user/edit-profile', [UserController::class, 'editProfile']);
 Route::group([
     "middleware" => [
         "auth",

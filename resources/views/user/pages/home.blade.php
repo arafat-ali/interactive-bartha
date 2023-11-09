@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+@extends('user.layouts.default')
 @section('content')
 
     <main
