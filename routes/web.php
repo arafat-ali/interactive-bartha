@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +17,8 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
-
-
 
 Route::get('/register', [AuthController::class, 'register']);
 Route::post('/register', [AuthController::class, 'postRegister']);
@@ -28,13 +27,17 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'postLogin'])->name('post-login');
 
 
-Route::get('/user', [UserController::class, 'home'])->name('user');
-Route::get('/user/profile', [UserController::class, 'profile']);
-Route::get('/user/edit-profile', [UserController::class, 'editProfile']);
+
 Route::group([
     "middleware" => [
         "auth",
     ],
+    "prefix"     => "user/"
 ], function () {
+    Route::get('/', [UserController::class, 'home'])->name('user');
+    Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [UserProfileController::class, 'edit']);
+    Route::put('/profile/edit', [UserProfileController::class, 'update']);
 
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

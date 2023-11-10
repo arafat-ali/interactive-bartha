@@ -21,8 +21,8 @@
 
         <!-- User Meta -->
         <div>
-          <h1 class="font-bold md:text-2xl">Ahmed Shamim Hasan Shaon</h1>
-          <p class="text-gray-700">Less Talk, More Code 💻</p>
+          <h1 class="font-bold md:text-2xl">{{$data->firstName . ' ' . $data->lastName}}</h1>
+          <p class="text-gray-700">{{$data->bio ?? ''}}</p>
         </div>
         <!-- / User Meta -->
       </div>
@@ -30,7 +30,7 @@
 
       <!-- Edit Profile Button (Only visible to the profile owner) -->
       <a
-        href="./edit-profile.html"
+        href="/user/profile/edit"
         type="button"
         class="-m-2 flex gap-2 items-center rounded-full px-4 py-2 font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700">
         <svg
