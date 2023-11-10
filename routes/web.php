@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,9 @@ Route::group([
     "prefix"     => "user/"
 ], function () {
     Route::get('/', [UserController::class, 'home'])->name('user');
-    Route::get('/profile', [UserController::class, 'profile']);
-    Route::get('/edit-profile', [UserController::class, 'editProfile']);
+    Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [UserProfileController::class, 'edit']);
+    Route::put('/profile/edit', [UserProfileController::class, 'update']);
+
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

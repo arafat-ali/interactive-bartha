@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -12,10 +13,12 @@ class UserController extends Controller
     }
 
     public function profile(){
-        return view('user.pages.profile');
+        $user = Auth::user();
+        return view('user.pages.profile', ["data"=>$user]);
     }
 
     public function editProfile(){
-        return view('user.pages.editProfile');
+        $user = Auth::user();
+        return view('user.pages.editProfile', ["data"=>$user]);
     }
 }
