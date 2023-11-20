@@ -7,6 +7,8 @@
 
         @yield('content')
 
+
         @include('user.includes.footer')
+        @yield('extra-script')
     </body>
 </html>
