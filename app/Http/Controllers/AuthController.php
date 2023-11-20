@@ -9,6 +9,7 @@ use App\Http\Requests\LoginFormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 class AuthController extends Controller
 {
 
@@ -20,9 +21,15 @@ class AuthController extends Controller
         $user = $request->only(['firstName', 'lastName', 'email']);
         $success = DB::table('users')->insert([
             ...$user,
+            'uuid' => Str::uuid(),
             'password' => bcrypt($request->password)
         ]);
-        if($success) return redirect()->route('login')->with('message', 'Registration successful');
+
+        if($success) {
+            flash()->addSuccess('Registration successfully!');
+            return redirect()->route('login');
+        }
+        flash()->addWarning('Registration failed');
         return back()->withInput();
     }
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,12 @@ Route::group([
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [UserProfileController::class, 'edit']);
     Route::put('/profile/edit', [UserProfileController::class, 'update']);
+
+    Route::post('/post/create', [PostController::class, 'create']);
+    Route::get('/post/details/{id}', [PostController::class, 'show']);
+    Route::get('/post/edit/{id}', [PostController::class, 'edit']);
+    Route::put('/post/edit/{id}', [PostController::class, 'update']);
+    Route::delete('/post/delete/{id}', [PostController::class, 'delete']);
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

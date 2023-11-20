@@ -26,4 +26,5 @@
         font-family: 'Inter', sans-serif;
       }
     </style>
+    @yield('extra-head')
 </head>
