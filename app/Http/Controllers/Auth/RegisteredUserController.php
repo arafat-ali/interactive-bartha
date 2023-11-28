@@ -39,21 +39,11 @@ class RegisteredUserController extends Controller
             'uuid' => Str::uuid(),
             'password' => Hash::make($request->password)
         ]);
-        $success = DB::table('users')->insert();
 
         event(new Registered($user));
 
         Auth::login($user);
-
+        flash()->addSuccess('Registration successfully!');
         return redirect(RouteServiceProvider::HOME);
-
-
-
-        if($success) {
-            flash()->addSuccess('Registration successfully!');
-            return redirect()->route('login');
-        }
-        flash()->addWarning('Registration failed');
-        return back()->withInput();
     }
 }
