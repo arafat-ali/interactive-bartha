@@ -50,7 +50,7 @@ Route::group([
     "prefix"     => "user/"
 ], function () {
     Route::get('/', [DashboardController::class, 'home'])->name('user');
-    Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/{uuid}', [UserProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [UserProfileController::class, 'edit']);
     Route::put('/profile/edit', [UserProfileController::class, 'update']);
 

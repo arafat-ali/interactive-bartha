@@ -30,14 +30,14 @@ class PostController extends Controller
 
     public function create(CreatePostRequest $request):RedirectResponse{
         $data = $request->safe()->only('title');
-
         $success = $this->postService->create($data);
-        if($success) {
-            flash()->options(['timeout' => 2000])->addSuccess('Post created successfully!');
-            return redirect()->intended('user');
+        if(!$success) {
+            flash()->options(['timeout' => 2000])->addWarning('Post creation failed');
+            return back()->withInput();
         }
-        flash()->options(['timeout' => 2000])->addWarning('Post creation failed');
-        return back()->withInput();
+        flash()->options(['timeout' => 2000])->addSuccess('Post created successfully!');
+        return back();
+
     }
 
 
