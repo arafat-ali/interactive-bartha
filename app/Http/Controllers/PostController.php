@@ -10,6 +10,7 @@ use App\Http\Requests\EditPostFormRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 class PostController extends Controller
 {
 
@@ -27,7 +28,9 @@ class PostController extends Controller
         $success = DB::table('posts')->insert([
             ...$data,
             'uuid' => Str::uuid(),
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::user()->id,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
 
         if($success) {
@@ -47,7 +50,10 @@ class PostController extends Controller
 
     public function update(EditPostFormRequest $request, $uuid):RedirectResponse{
         $data = $request->safe()->only('title');
-        $success = DB::table('posts')->where('uuid', $uuid)->update($data);
+        $success = DB::table('posts')->where('uuid', $uuid)->update([
+            ...$data,
+            'updated_at' => Carbon::now()
+        ]);
 
         if($success) {
             flash()->options(['timeout' => 2000])->addSuccess('Post updated successfully!');

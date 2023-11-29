@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\PostController;
 
@@ -24,13 +24,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+Route::group([
+    "middleware" => [
+        "auth",
+    ],
+], function () {
+    Route::get('/', [DashboardController::class, 'home'])->name('user');
+});
+
 Route::group([
     "middleware" => [
         "auth",
     ],
     "prefix"     => "user/"
 ], function () {
-    Route::get('/', [UserController::class, 'home'])->name('user');
+    Route::get('/', [DashboardController::class, 'home'])->name('user');
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [UserProfileController::class, 'edit']);
     Route::put('/profile/edit', [UserProfileController::class, 'update']);
@@ -41,7 +50,7 @@ Route::group([
     Route::put('/post/edit/{id}', [PostController::class, 'update']);
     Route::delete('/post/delete/{id}', [PostController::class, 'delete']);
 
-    // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');+
 });
 
 require __DIR__.'/auth.php';
