@@ -18,7 +18,7 @@
 
       <!-- Barta Create Post Card -->
       <form
-        action="/user/post/create"
+        action="/post/create"
         method="POST"
         enctype="multipart/form-data"
         class="bg-white border-2 border-black rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6 space-y-3">
@@ -41,7 +41,7 @@
                 class="block w-full p-2 pt-2 text-gray-900 rounded-lg border-none outline-none focus:ring-0 focus:ring-offset-0"
                 name="title"
                 rows="2"
-                placeholder="What's going on, Shamim?"></textarea>
+                placeholder="What's going on, {{auth()->user()->firstName}}?"></textarea>
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@
                     aria-labelledby="user-menu-button"
                     tabindex="-1">
                     <a
-                        href="/user/post/details/{{$post->uuid}}"
+                        href="/post/{{$post->uuid}}"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                         tabindex="-1"
@@ -145,7 +145,7 @@
                     >Details</a>
                     @if(auth()->user()->id == $post->userId)
                     <a
-                        href="/user/post/edit/{{$post->uuid}}"
+                        href="/post/edit/{{$post->uuid}}"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                         tabindex="-1"
@@ -176,7 +176,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                     </svg>
                                     <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this product?</h3>
-                                    <form action="/user/post/delete/{{$post->uuid}}" method="POST">
+                                    <form action="/post/delete/{{$post->uuid}}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button data-modal-hide="popup-modal" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center me-2">
@@ -219,13 +219,14 @@
               Keep me in your prayers 😌
             </p> --}}
 
-            <a href="/user/post/details/{{$post->uuid}}" class="py-8">{{$post->title}}</a>
+            <a href="/post/{{$post->uuid}}" class="py-8">{{$post->title}}</a>
           </div>
 
           <!-- Date Created & View Stat -->
           <div class="flex items-center gap-2 text-gray-500 text-xs my-2">
             {{-- <span class="">6 minutes ago</span> --}}
-            <span class="">{{$post->post_created}}</span>
+            {{-- <span class="">{{$post->post_created}}</span> --}}
+            <span class="">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</span>
             <span class="">•</span>
             <span>{{$post->views}} views</span>
           </div>
@@ -237,7 +238,7 @@
               <div class="flex gap-8 text-gray-600">
                 <!-- Comment Button -->
                 <a
-                  href="./single.html"
+                  href="/post/{{$post->uuid}}"
                   type="button"
                   class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800">
                   <span class="sr-only">Comment</span>
@@ -254,7 +255,7 @@
                       d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                   </svg>
 
-                  <p>0</p>
+                  <p>{{$post->comments_count}}</p>
                 </a>
                 <!-- /Comment Button -->
               </div>

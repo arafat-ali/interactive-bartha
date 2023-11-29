@@ -142,11 +142,124 @@
 
           <!-- Date Created & View Stat -->
           <div class="flex items-center gap-2 text-gray-500 text-xs my-2">
-            <span class="">6 minutes ago</span>
+            <span class="">{{ \Carbon\Carbon::parse($post->created_at)->diffForHumans()}}</span>
             <span class="">•</span>
-            <span>450 views</span>
+            <span>{{$post->views}} views</span>
           </div>
+
+          <hr class="my-6" />
+
+          <!-- Barta Create Comment Form -->
+          <form action="{{route('create-comment', $post->uuid)}}" method="POST">
+            @csrf
+            <!-- Create Comment Card Top -->
+            <div>
+              <div class="flex items-start space-x-3">
+                <!-- User Avatar -->
+                 <div class="flex-shrink-0">
+                    <img
+                      class="h-10 w-10 rounded-full object-cover"
+                      src="https://avatars.githubusercontent.com/u/831997"
+                      alt="Ahmed Shamim" />
+                  </div>
+                <!-- /User Avatar -->
+
+                <!-- Auto Resizing Comment Box -->
+                <div class="text-gray-700 font-normal w-full">
+                  <textarea
+                    x-data="{
+                          resize () {
+                              $el.style.height = '0px';
+                              $el.style.height = $el.scrollHeight + 'px'
+                          }
+                      }"
+                    x-init="resize()"
+                    @input="resize()"
+                    type="text"
+                    name="title"
+                    placeholder="Write a comment..."
+                    class="flex w-full h-auto min-h-[40px] px-3 py-2 text-sm bg-gray-100 focus:bg-white border border-sm rounded-lg border-neutral-300 ring-offset-background placeholder:text-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-1 focus:ring-offset-0 focus:ring-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 text-gray-900"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Create Comment Card Bottom -->
+            <div>
+              <!-- Card Bottom Action Buttons -->
+              <div class="flex items-center justify-end">
+                <button
+                  type="submit"
+                  class="mt-2 flex gap-2 text-xs items-center rounded-full px-4 py-2 font-semibold bg-gray-800 hover:bg-black text-white">
+                  Comment
+                </button>
+              </div>
+              <!-- /Card Bottom Action Buttons -->
+            </div>
+            <!-- /Create Comment Card Bottom -->
+          </form>
+          <!-- /Barta Create Comment Form -->
+
         </article>
+
+        <hr />
+
+        <div class="flex flex-col space-y-6">
+          <h1 class="text-lg font-semibold"> {{sizeof($post->comments)!==0 ? 'Comments('. sizeOf($post->comments).')' : ''}}</h1>
+
+          <!-- Barta User Comments Container -->
+          <article class=" {{sizeOf($post->comments)>0 ? 'border-2 border-black px-4 py-2 sm:px-6 ' : ''}} bg-white  rounded-lg shadow mx-auto max-w-none  min-w-full divide-y">
+            <!-- Comments -->
+
+            @foreach($post->comments as $comment)
+            <div class="py-4">
+              <!-- Barta User Comments Top -->
+              <header>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <!-- User Avatar -->
+                    <div class="flex-shrink-0">
+                      <img
+                              class="h-10 w-10 rounded-full object-cover"
+                              src="https://avatars.githubusercontent.com/u/61485238"
+                              alt="Al Nahian" />
+                    </div>
+                    <!-- /User Avatar -->
+                    <!-- User Info -->
+                    <div class="text-gray-900 flex flex-col min-w-0 flex-1">
+                      <a
+                        href="profile.html"
+                        class="hover:underline font-semibold line-clamp-1">
+                        {{$comment->firstName . ' ' . $comment->lastName}}
+                      </a>
+
+                      <a
+                        href="profile.html"
+                        class="hover:underline text-sm text-gray-500 line-clamp-1">
+                        {{'@'.explode("@", $comment->email)[0]}}
+                      </a>
+                    </div>
+                    <!-- /User Info -->
+                  </div>
+                </div>
+              </header>
+
+              <!-- Content -->
+              <div class="py-4 text-gray-700 font-normal">
+                <p>{{$comment->title}}</p>
+              </div>
+
+              <!-- Date Created -->
+              <div class="flex items-center gap-2 text-gray-500 text-xs">
+                <span class="">{{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans(['parts'=>1, 'short'=>true])}}</span>
+              </div>
+            </div>
+
+            @endforeach
+
+            <!-- /Comments -->
+          </article>
+          <!-- /Barta User Comments -->
+        </div>
       </section>
     </main>
 @stop

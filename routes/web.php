@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\PostController;
 
+use App\Http\Controllers\CommentController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +33,14 @@ Route::group([
     ],
 ], function () {
     Route::get('/', [DashboardController::class, 'home'])->name('user');
+
+    Route::get('/post/{uuid}', [PostController::class, 'show']);
+    Route::post('/post/create', [PostController::class, 'create']);
+    Route::get('/post/edit/{id}', [PostController::class, 'edit']);
+    Route::put('/post/edit/{id}', [PostController::class, 'update']);
+    Route::delete('/post/delete/{id}', [PostController::class, 'delete']);
+
+    Route::post('/post/{uuid}/comment/create', [CommentController::class, 'store'])->name('create-comment');
 });
 
 Route::group([
@@ -43,12 +53,6 @@ Route::group([
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [UserProfileController::class, 'edit']);
     Route::put('/profile/edit', [UserProfileController::class, 'update']);
-
-    Route::post('/post/create', [PostController::class, 'create']);
-    Route::get('/post/details/{id}', [PostController::class, 'show']);
-    Route::get('/post/edit/{id}', [PostController::class, 'edit']);
-    Route::put('/post/edit/{id}', [PostController::class, 'update']);
-    Route::delete('/post/delete/{id}', [PostController::class, 'delete']);
 
     // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');+
 });
