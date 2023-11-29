@@ -15,7 +15,7 @@ class PostService{
         $post = DB::table('posts')
                     ->join('users', 'users.id', 'posts.user_id')
                     ->where('posts.uuid', $uuid)
-                    ->select('posts.*', 'users.id as userId', 'users.firstName', 'users.lastName', 'users.email')
+                    ->select('posts.*', 'users.id as userId', 'users.uuid as userUuid', 'users.firstName', 'users.lastName', 'users.email')
                     ->first();
 
         //Update Views of Post of Other users
