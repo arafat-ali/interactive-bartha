@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditPostFormRequest extends FormRequest
+class EditPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class EditPostFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|min:2|max:64'
+            'title'       => 'required|min:2'
         ];
     }
 }

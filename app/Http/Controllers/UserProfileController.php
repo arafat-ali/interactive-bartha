@@ -7,11 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserProfileFormRequest;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Services\PostService;
+
 class UserProfileController extends Controller
 {
-    public function show(){
-        $user = Auth::user();
-        return view('user.pages.profile', ["data"=>$user]);
+    public function show($uuid, PostService $postService){
+        //data as User with posts
+        $data = $postService->postsWithCommentsCountByUser($uuid);
+        return view('user.pages.profile', ["data"=>$data]);
     }
 
     public function edit(){

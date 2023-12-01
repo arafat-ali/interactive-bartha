@@ -44,7 +44,7 @@
                 aria-labelledby="user-menu-button"
                 tabindex="-1">
                 <a
-                  href="/user/profile"
+                  href="/user/profile/{{auth()->user()->uuid}}"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
                   tabindex="-1"
@@ -59,14 +59,16 @@
                   id="user-menu-item-1"
                   >Edit Profile</a
                 >
-                <a
-                  href="/user/logout"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  role="menuitem"
-                  tabindex="-1"
-                  id="user-menu-item-2"
-                  >Sign out</a
-                >
+                <form action="{{route('logout')}}" method="POST" class="hover:bg-gray-100">
+                    @csrf
+                    <button class="block px-4 py-2 text-sm text-gray-700 "
+                        type="submit"
+                        role="menuitem"
+                        tabindex="-1"
+                        id="user-menu-item-2">
+                        Sign out
+                    </button>
+                </form>
               </div>
             </div>
           </div>

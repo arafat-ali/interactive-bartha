@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
+
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\PostController;
+
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,17 +20,28 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::get('/', function () {
-    return redirect()->route('login');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/register', [AuthController::class, 'register']);
-Route::post('/register', [AuthController::class, 'postRegister']);
 
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/login', [AuthController::class, 'postLogin'])->name('post-login');
+Route::group([
+    "middleware" => [
+        "auth",
+    ],
+], function () {
+    Route::get('/', [DashboardController::class, 'home'])->name('user');
 
+    Route::get('/post/{uuid}', [PostController::class, 'show']);
+    Route::post('/post/create', [PostController::class, 'create']);
+    Route::get('/post/edit/{id}', [PostController::class, 'edit']);
+    Route::put('/post/edit/{id}', [PostController::class, 'update']);
+    Route::delete('/post/delete/{id}', [PostController::class, 'delete']);
 
+    Route::post('/post/{uuid}/comment/create', [CommentController::class, 'store'])->name('create-comment');
+});
 
 Route::group([
     "middleware" => [
@@ -35,16 +49,12 @@ Route::group([
     ],
     "prefix"     => "user/"
 ], function () {
-    Route::get('/', [UserController::class, 'home'])->name('user');
-    Route::get('/profile', [UserProfileController::class, 'show'])->name('profile');
+    Route::get('/', [DashboardController::class, 'home'])->name('user');
+    Route::get('/profile/{uuid}', [UserProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [UserProfileController::class, 'edit']);
     Route::put('/profile/edit', [UserProfileController::class, 'update']);
 
-    Route::post('/post/create', [PostController::class, 'create']);
-    Route::get('/post/details/{id}', [PostController::class, 'show']);
-    Route::get('/post/edit/{id}', [PostController::class, 'edit']);
-    Route::put('/post/edit/{id}', [PostController::class, 'update']);
-    Route::delete('/post/delete/{id}', [PostController::class, 'delete']);
-
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');+
 });
+
+require __DIR__.'/auth.php';

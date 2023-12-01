@@ -5,37 +5,39 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\CreatePostFormRequest;
-use App\Http\Requests\EditPostFormRequest;
+use App\Http\Requests\CreatePostRequest;
+use App\Http\Requests\EditPostRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
+use App\Services\PostService;
+
 class PostController extends Controller
 {
 
+    private PostService $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
     public function show($uuid){
-        $post = DB::table('posts')
-                    ->join('users', 'users.id', 'posts.user_id')
-                    ->where('posts.uuid', $uuid)
-                    ->select('posts.*', 'users.id as userId', 'users.firstName', 'users.lastName', 'users.email')
-                    ->first();
+        $post = $this->postService->show($uuid);
         return view('user.pages.post', ["post" => $post]);
     }
 
-    public function create(CreatePostFormRequest $request):RedirectResponse{
+    public function create(CreatePostRequest $request):RedirectResponse{
         $data = $request->safe()->only('title');
-        $success = DB::table('posts')->insert([
-            ...$data,
-            'uuid' => Str::uuid(),
-            'user_id' => Auth::user()->id
-        ]);
-
-        if($success) {
-            flash()->options(['timeout' => 2000])->addSuccess('Post created successfully!');
-            return redirect()->intended('user');
+        $success = $this->postService->create($data);
+        if(!$success) {
+            flash()->options(['timeout' => 2000])->addWarning('Post creation failed');
+            return back()->withInput();
         }
-        flash()->options(['timeout' => 2000])->addWarning('Post creation failed');
-        return back()->withInput();
+        flash()->options(['timeout' => 2000])->addSuccess('Post created successfully!');
+        return back();
+
     }
 
 
@@ -45,9 +47,12 @@ class PostController extends Controller
     }
 
 
-    public function update(EditPostFormRequest $request, $uuid):RedirectResponse{
+    public function update(EditPostRequest $request, $uuid):RedirectResponse{
         $data = $request->safe()->only('title');
-        $success = DB::table('posts')->where('uuid', $uuid)->update($data);
+        $success = DB::table('posts')->where('uuid', $uuid)->update([
+            ...$data,
+            'updated_at' => Carbon::now()
+        ]);
 
         if($success) {
             flash()->options(['timeout' => 2000])->addSuccess('Post updated successfully!');
