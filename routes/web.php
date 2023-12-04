@@ -35,7 +35,7 @@ Route::group([
     Route::get('/', [DashboardController::class, 'home'])->name('user');
 
     Route::get('/post/{uuid}', [PostController::class, 'show']);
-    Route::post('/post/create', [PostController::class, 'create']);
+    Route::post('/post/create', [PostController::class, 'store']);
     Route::get('/post/edit/{id}', [PostController::class, 'edit']);
     Route::put('/post/edit/{id}', [PostController::class, 'update']);
     Route::delete('/post/delete/{id}', [PostController::class, 'delete']);
