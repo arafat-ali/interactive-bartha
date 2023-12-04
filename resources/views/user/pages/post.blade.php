@@ -26,7 +26,7 @@
                 <div class="flex-shrink-0">
                     <img
                     class="h-10 w-10 rounded-full object-cover"
-                    src="{{ $post->firstName == auth()->user()->firstName ? 'https://avatars.githubusercontent.com/u/32349150?v=4':'https://avatars.githubusercontent.com/u/61485238'}}"
+                    src="{{ $post->user->firstName == auth()->user()->firstName ? 'https://avatars.githubusercontent.com/u/32349150?v=4':'https://avatars.githubusercontent.com/u/61485238'}}"
                     alt="Al Nahian" />
                 </div>
                 <!-- /User Avatar -->
@@ -34,15 +34,15 @@
                 <!-- User Info -->
                 <div class="text-gray-900 flex flex-col min-w-0 flex-1">
                   <a
-                    href="/user/profile/{{$post->userUuid}}"
+                    href="/user/profile/{{$post->user->uuid}}"
                     class="hover:underline font-semibold line-clamp-1">
-                    {{$post->firstName . ' ' . $post->lastName}}
+                    {{$post->user->firstName . ' ' . $post->user->lastName}}
                   </a>
 
                   <a
                     href="/user/profile/{{$post->userUuid}}"
                     class="hover:underline text-sm text-gray-500 line-clamp-1">
-                    {{'@'.explode("@", $post->email)[0]}}
+                    {{'@'.explode("@", $post->user->email)[0]}}
                   </a>
                 </div>
                 <!-- /User Info -->
@@ -204,7 +204,7 @@
         <hr />
 
         <div class="flex flex-col space-y-6">
-          <h1 class="text-lg font-semibold"> {{sizeof($post->comments)!==0 ? 'Comments('. sizeOf($post->comments).')' : ''}}</h1>
+          <h1 class="text-lg font-semibold"> {{$comments->count()!==0 ? 'Comments('. $comments->count() .')' : ''}}</h1>
 
           <!-- Barta User Comments Container -->
           <article class=" {{sizeOf($post->comments)>0 ? 'border-2 border-black px-4 py-2 sm:px-6 ' : ''}} bg-white  rounded-lg shadow mx-auto max-w-none  min-w-full divide-y">
@@ -229,13 +229,13 @@
                       <a
                         href="profile.html"
                         class="hover:underline font-semibold line-clamp-1">
-                        {{$comment->firstName . ' ' . $comment->lastName}}
+                        {{$comment->user->firstName . ' ' . $comment->user->lastName}}
                       </a>
 
                       <a
                         href="profile.html"
                         class="hover:underline text-sm text-gray-500 line-clamp-1">
-                        {{'@'.explode("@", $comment->email)[0]}}
+                        {{'@'.explode("@", $comment->user->email)[0]}}
                       </a>
                     </div>
                     <!-- /User Info -->

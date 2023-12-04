@@ -19,7 +19,6 @@ class DashboardController extends Controller
 
     public function home(){
         $posts = $this->postService->postsWithCommentsCount();
-
         return view('user.pages.home', ["data" => $posts]);
     }
 

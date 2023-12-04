@@ -24,13 +24,13 @@ class PostController extends Controller
     }
 
     public function show($uuid){
-        $post = $this->postService->show($uuid);
-        return view('user.pages.post', ["post" => $post]);
+        $data = $this->postService->show($uuid);
+        return view('user.pages.post', $data);
     }
 
-    public function create(CreatePostRequest $request):RedirectResponse{
+    public function store(CreatePostRequest $request):RedirectResponse{
         $data = $request->safe()->only('title');
-        $success = $this->postService->create($data);
+        $success = $this->postService->store($data, $request->hasFile('post_image') ? $request->file('post_image') : null);
         if(!$success) {
             flash()->options(['timeout' => 2000])->addWarning('Post creation failed');
             return back()->withInput();

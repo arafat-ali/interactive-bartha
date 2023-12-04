@@ -9,15 +9,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\UploadedFile as File;
+use App\Models\Comment;
 
 class PostService{
 
-    public function show($uuid):object{
-        $post = DB::table('posts')
-                    ->join('users', 'users.id', 'posts.user_id')
-                    ->where('posts.uuid', $uuid)
-                    ->select('posts.*', 'users.id as userId', 'users.uuid as userUuid', 'users.firstName', 'users.lastName', 'users.email')
-                    ->first();
+    public function show($uuid):Array{
+        $post = Post::with('user')->where('posts.uuid', $uuid)->first();
+        $comments = Comment::with('user')->where('post_id', $post->id)->get();
 
         //Update Views of Post of Other users
         if($post->user_id !== Auth::user()->id){
@@ -25,19 +24,11 @@ class PostService{
                 $post->views += 1;
             }
         }
-
-        $comments = DB::table('comments')
-                    ->join('users', 'users.id', 'comments.user_id')
-                    ->select('comments.*','firstName', 'lastName', 'email')
-                    ->where('comments.post_id', $post->id)
-                    ->get();
-
-        $post->comments = $comments;
-        return $post;
+        return compact("post", "comments");
     }
 
-    public function create(Array $data):bool{
-        $success = DB::table('posts')->insert([
+    public function store(Array $data, File $image = null):bool{
+        $post = Post::create([
             ...$data,
             'uuid' => Str::uuid(),
             'user_id' => Auth::user()->id,
@@ -45,7 +36,12 @@ class PostService{
             'updated_at' => Carbon::now()
         ]);
 
-        return $success;
+        if($image){
+            $post->addMedia($image)
+                    ->toMediaCollection();
+        }
+
+        return true;
     }
 
 
@@ -68,13 +64,15 @@ class PostService{
         //     $post->comments_count = DB::table('comments')->where('post_id', $post->id)->count();
         // }
 
-        $posts = DB::table('posts')
-                    ->select('posts.*', 'users.id as userId', 'users.firstName', 'users.lastName', 'users.email', DB::raw('count(comments.id) as comments_count'))
-                    ->join('users', 'users.id', 'posts.user_id')
-                    ->leftJoin('comments', 'posts.id', '=', 'comments.post_id')
-                    ->groupBy('posts.id')
-                    ->orderBy('posts.id', 'DESC')
-                    ->get();
+        // $posts = DB::table('posts')
+        //             ->select('posts.*', 'users.id as userId', 'users.uuid as userUuid', 'users.firstName', 'users.lastName', 'users.email', DB::raw('count(comments.id) as comments_count'))
+        //             ->join('users', 'users.id', 'posts.user_id')
+        //             ->leftJoin('comments', 'posts.id', '=', 'comments.post_id')
+        //             ->groupBy('posts.id')
+        //             ->orderBy('posts.id', 'DESC')
+        //             ->get();
+
+        $posts = Post::with('user','comments')->orderBy('id', 'DESC')->get();
 
         return $posts;
 
@@ -107,7 +105,8 @@ class PostService{
 
 
     public function updateViews($post){
-        return DB::table('posts')->where('id', $post->id)->update(['views' => $post->views+1]);
+        $post->update(['views' => $post->views+1]);
+        return true;
     }
 
 }
