@@ -25,7 +25,14 @@ class UserProfileFormRequest extends FormRequest
             'firstName'       => 'required|min:2|max:64',
             'lastName'        => 'required|min:2|max:64',
             'password'        => 'nullable|min:6|max:64',
-            'confirmPassword' => 'nullable|required_unless:password,null|same:password|min:6|max:64'
+            'confirmPassword' => 'nullable|required_unless:password,null|same:password|min:6|max:64',
+            'bio'             => 'nullable'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'confirmPassword.required_unless' => 'Confirm password is required, If password field exists!',
         ];
     }
 }

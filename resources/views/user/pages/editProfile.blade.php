@@ -1,6 +1,14 @@
 @extends('user.layouts.default')
 @section('content')
 
+@if($errors->any())
+    <ul>
+    @forEach($errors->all() as $error)
+        <li>{{$error}}</li>
+    @endforEach
+    </ul>
+@endif
+
 <main
       class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
       <!-- Profile Edit Form -->
@@ -87,6 +95,9 @@
                       placeholder="••••••••"
                       class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" />
                   </div>
+                    @if($errors->has('password'))
+                    <div class="text-red-600 text-right">{{$errors->first('password')}}</div>
+                    @endif
                 </div>
 
                 <div class="col-span-full">
@@ -102,8 +113,11 @@
                         id="confirmPassword"
                         autocomplete="password"
                         placeholder="••••••••"
-                        class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" />
+                        class="{{$errors->has('confirmPassword') ? 'ring-red-300':'ring-gray-300'}} block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6" />
                     </div>
+                    @if($errors->has('confirmPassword'))
+                    <div class="text-red-600 text-right">{{$errors->first('confirmPassword')}}</div>
+                    @endif
                 </div>
               </div>
             </div>

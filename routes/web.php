@@ -20,11 +20,11 @@ use App\Http\Controllers\CommentController;
 |
 */
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
 
 Route::group([
@@ -41,20 +41,26 @@ Route::group([
     Route::delete('/post/delete/{id}', [PostController::class, 'delete']);
 
     Route::post('/post/{uuid}/comment/create', [CommentController::class, 'store'])->name('create-comment');
+
+
 });
+
+
+
+require __DIR__.'/auth.php';
 
 Route::group([
     "middleware" => [
         "auth",
     ],
-    "prefix"     => "user/"
+    "prefix"     => "user"
 ], function () {
-    Route::get('/', [DashboardController::class, 'home'])->name('user');
-    Route::get('/profile/{uuid}', [UserProfileController::class, 'show'])->name('profile');
-    Route::get('/profile/edit', [UserProfileController::class, 'edit']);
+
+    Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile-edit');
     Route::put('/profile/edit', [UserProfileController::class, 'update']);
+    Route::get('/profile/{uuid}', [UserProfileController::class, 'show'])->name('profile');
+
+    Route::post('/search', [UserProfileController::class, 'search'])->name('search-user');
 
     // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');+
 });
-
-require __DIR__.'/auth.php';

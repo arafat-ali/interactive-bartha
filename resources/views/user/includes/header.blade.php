@@ -12,7 +12,8 @@
               </a>
             </div>
           </div>
-          <form action="{{route('search')}}" method="POST" class="flex items-center">
+          <form action="{{route('search-user')}}" method="POST" class="flex items-center">
+            @csrf
             <input
                 type="text"
                 name="search_text"
@@ -67,7 +68,7 @@
                   >Your Profile</a
                 >
                 <a
-                  href="/user/profile/edit"
+                  href="{{route('profile-edit')}}"
                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
                   tabindex="-1"

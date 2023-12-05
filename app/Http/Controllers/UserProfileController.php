@@ -24,15 +24,28 @@ class UserProfileController extends Controller
     }
 
     public function update(UserProfileFormRequest $request){
-        $user = Auth::user();
-        $data = $request->only(['firstName', 'lastName', 'bio']);
+        $data = $request->safe()->only(['firstName', 'lastName', 'bio']);
+        if(isset($request->password)) $data['password'] = bcrypt($request->password);
 
-        if(isset($request->password)){
-            $data['password'] = bcrypt($request->password);
+        $success = User::where('id', Auth::user()->id)->update($data);
+        if(!$success){
+            flash()->options(['timeout' => 2000])->addWarning('Profile update failed');
+            return back()->withInput();
         }
-
-        $success = DB::table('users')->where('id', $user->id)->update($data);
-        if($success) return redirect()->route('profile')->with('message', 'Profile successfully updated!');
-        return back()->withInput();
+        flash()->options(['timeout' => 2000])->addSuccess('Profile successfully updated!');
+        return redirect()->route('profile', Auth::user()->uuid);
     }
+
+
+    public function search(Request $request){
+        $searchText = $request->search_text;
+        $searchFields = ['firstName', 'lastName', 'email'];
+        $users = User::with('posts', 'comments')->where(function($q) use($searchFields, $searchText){
+            foreach($searchFields as $field) $q->orWhere($field, 'like', "%{$searchText}%");
+        })->get();
+
+        return view('user.pages.listUsers', ["data"=>$users]);
+    }
+
+
 }
