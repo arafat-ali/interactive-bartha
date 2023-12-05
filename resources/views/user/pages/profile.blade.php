@@ -12,8 +12,8 @@
         <div class="relative">
           <img
             class="w-32 h-32 rounded-full border-2 border-gray-800"
-            src="https://avatars.githubusercontent.com/u/32349150?v=4"
-            alt="Ahmed Shamim" />
+            src="{{$data->getFirstMediaUrl() != null ? $data->getFirstMediaUrl() : 'https://avatars.githubusercontent.com/u/32349150?v=4'}}"
+            alt="{{$data->firstName . ' ' .$data->lastName }}" />
 <!--            <span class="bottom-2 right-4 absolute w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>-->
         </div>
         <!-- /Avatar -->
@@ -81,7 +81,7 @@
           <div class="flex-shrink-0">
             <img
                     class="h-10 w-10 rounded-full object-cover"
-                    src="https://avatars.githubusercontent.com/u/32349150?v=4"
+                    src="{{$data->getFirstMediaUrl() != null ? $data->getFirstMediaUrl() : 'https://avatars.githubusercontent.com/u/32349150?v=4'}}"
                     alt="Ahmed Shamim" />
           </div>
           <!-- /User Avatar -->
@@ -197,7 +197,7 @@
                 <div class="flex-shrink-0">
                   <img
                     class="h-10 w-10 rounded-full object-cover"
-                    src="https://avatars.githubusercontent.com/u/32349150?v=4"
+                    src="{{$data->getFirstMediaUrl() != null ? $data->getFirstMediaUrl() : 'https://avatars.githubusercontent.com/u/32349150?v=4'}}"
                     alt="Al Nahian" />
                 </div>
                 <!-- /User Avatar -->

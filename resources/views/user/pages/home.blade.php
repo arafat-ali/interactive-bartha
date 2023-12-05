@@ -155,7 +155,7 @@
                 <div class="flex-shrink-0">
                   <img
                     class="h-10 w-10 rounded-full object-cover"
-                    src="{{ $post->user->firstName == auth()->user()->firstName ? 'https://avatars.githubusercontent.com/u/32349150?v=4':'https://avatars.githubusercontent.com/u/61485238'}}"
+                    src="{{ $post->user->getFirstMediaUrl() !=null ? $post->user->getFirstMediaUrl(): 'https://avatars.githubusercontent.com/u/32349150?v=4'}}"
                     alt="Al Nahian" />
                 </div>
                 <!-- /User Avatar -->

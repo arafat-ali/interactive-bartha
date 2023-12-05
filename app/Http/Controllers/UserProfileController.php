@@ -27,7 +27,12 @@ class UserProfileController extends Controller
         $data = $request->safe()->only(['firstName', 'lastName', 'bio']);
         if(isset($request->password)) $data['password'] = bcrypt($request->password);
 
-        $success = User::where('id', Auth::user()->id)->update($data);
+        $user = user::find(Auth::user()->id);
+        $success = $user->update($data);
+        if($request->hasFile('avatar')){
+            $user->addMedia($request->file('avatar'))->toMediaCollection();
+        }
+
         if(!$success){
             flash()->options(['timeout' => 2000])->addWarning('Profile update failed');
             return back()->withInput();

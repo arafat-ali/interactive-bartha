@@ -13,7 +13,7 @@
         <div class="max-w-[40%]">
           <img
             class="w-32 h-32 rounded-lg border-2 border-gray-800"
-            src="https://avatars.githubusercontent.com/u/32349150?v=4"
+            src="{{$user->getFirstMediaUrl() != null ? $user->getFirstMediaUrl() : 'https://avatars.githubusercontent.com/u/32349150?v=4'}}"
             alt="Ahmed Shamim" />
 <!--            <span class="bottom-2 right-4 absolute w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>-->
         </div>
